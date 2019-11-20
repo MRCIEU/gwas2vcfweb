@@ -45,6 +45,10 @@ class Upload(Resource):
                         help="Column number for summary statistics imputation INFO score")
     parser.add_argument('ncontrol_col', type=int, required=False,
                         help="Column index for control sample size; total sample size if continuous trait")
+    parser.add_argument('ncontrol', type=int, required=False,
+                        help="Total number of controls used in study")
+    parser.add_argument('ncases', type=int, required=False,
+                        help="Total number of cases used in study")
 
     @staticmethod
     def validate_row_with_schema(line_split, args):
@@ -145,11 +149,26 @@ class Upload(Resource):
         except IndexError as e:
             return {'message': 'Check column numbers and separator: {}'.format(e)}, 400
 
-        # drop non-serializable
-        del args['gwas_file']
+        # set WDL params
+        wdl = dict()
+        wdl['gwas2vcf.JobId'] = args['job_id']
+        wdl['gwas2vcf.SumStatsFilename'] = output_path
+
+        if 'ncase' in args and args['ncase'] is not None:
+            wdl['gwas2vcf.Cases'] = args['ncase']
+
+        if 'ncontrol' in args and args['ncontrol'] is not None:
+            wdl['gwas2vcf.Controls'] = args['ncontrol']
+
+        wdl['gwas2vcf.RefGenomeFile'] = Globals.RefGenomeFile
+        wdl['gwas2vcf.RefGenomeFileIdx'] = Globals.RefGenomeFileIdx
+        wdl['gwas2vcf.DbSnpVcfFile'] = Globals.DbSnpVcfFile
+        wdl['gwas2vcf.DbSnpVcfFileIdx'] = Globals.DbSnpVcfFileIdx
+        wdl['gwas2vcf.AfVcfFile'] = Globals.AfVcfFile
+        wdl['gwas2vcf.AfVcfFileIdx'] = Globals.AfVcfFileIdx
 
         with open(os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'w') as f:
-            json.dump(args, f)
+            json.dump(wdl, f)
 
         # add to workflow queue
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
