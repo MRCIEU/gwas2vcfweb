@@ -2,7 +2,10 @@
 
 Web interface for processing GWAS summary data to VCF format
 
-## Build gwas2vcf image
+## Install
 
-See [here](https://github.com/MRCIEU/gwas2vcf) for instructions
-
+```sh
+git clone --recurse-submodules git@github.com:MRCIEU/gwas2vcfweb.git
+cd gwas2vcfweb
+docker-compose up -d
+```
