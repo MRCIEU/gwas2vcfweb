@@ -121,25 +121,27 @@ class Upload(Resource):
         # convert text to bool
         args['header'] = (args['header'] == "True")
         args['gzipped'] = (args['gzipped'] == "True")
-        args['header'] = (args['header'] == "True")
 
         # create job directory
         job_dir = os.path.join(Globals.UPLOAD_FOLDER, args['job_id'])
+        logging.info("Creating job directory: {}".format(job_dir))
         os.mkdir(job_dir)
 
         # upload file
         if args['gzipped']:
             output_filename = '{}.txt.gz'.format(args['job_id'])
+            output_path = os.path.join(job_dir, output_filename)
 
-            logging.info("Saving to {}".format(output_filename))
-            args['gwas_file'].save(os.path.join(job_dir, output_filename))
-            f = gzip.open(os.path.join(job_dir, output_filename), 'rt')
+            logging.info("Saving to {}".format(output_path))
+            args['gwas_file'].save(output_path)
+            f = gzip.open(output_path, 'rt')
         else:
             output_filename = '{}.txt'.format(args['job_id'])
+            output_path = os.path.join(job_dir, output_filename)
 
-            logging.info("Saving to {}".format(output_filename))
-            args['gwas_file'].save(os.path.join(job_dir, output_filename))
-            f = open(os.path.join(job_dir, output_filename), 'r')
+            logging.info("Saving to {}".format(output_path))
+            args['gwas_file'].save(output_path)
+            f = open(output_path, 'r')
 
         # check file is valid
         if args['header']:
@@ -155,11 +157,14 @@ class Upload(Resource):
                     break
                 Upload.validate_row_with_schema(line.strip().split(args['delimiter']), args)
             f.close()
-        except OSError:
+        except OSError as e:
+            logging.error("Could not read file: {}".format(e))
             return {'message': 'Could not read file. Check encoding'}, 400
         except marshmallow.exceptions.ValidationError as e:
+            logging.error("Could not read file: {}".format(e))
             return {'message': 'The file format was invalid {}'.format(e)}, 400
         except IndexError as e:
+            logging.error("Could not read file: {}".format(e))
             return {'message': 'Check column numbers and separator: {}'.format(e)}, 400
 
         # set WDL params
@@ -193,6 +198,7 @@ class Upload(Resource):
             json.dump(args, f)
 
         # add to workflow queue
+        logging.info("Send POST request to cromwell for analysis")
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
                           files={'workflowSource': open(Globals.QC_WDL_PATH, 'rb'),
                                  'workflowInputs': open(os.path.join(job_dir, 'wdl.json'), 'rb')})

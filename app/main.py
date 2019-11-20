@@ -31,4 +31,5 @@ api.add_namespace(download)
 api.init_app(app)
 
 if __name__ == "__main__":
+    logging.info("Starting server")
     app.run(host='0.0.0.0', port=80)
