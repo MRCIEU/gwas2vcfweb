@@ -31,12 +31,5 @@ services:
       - /data:/data
       - /etc/timezone:/etc/timezone:ro
     command: ["server"]
-    depends_on:
-      - gwas2vcf
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000"]
-
-    gwas2vcf:
-      build:
-        context: ./gwas2vcf
-        dockerfile: Dockerfile
