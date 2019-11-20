@@ -7,5 +7,5 @@ Web interface for processing GWAS summary data to VCF format
 ```sh
 git clone --recurse-submodules git@github.com:MRCIEU/gwas2vcfweb.git
 cd gwas2vcfweb
-docker-compose up -d
+docker-compose -p gwas2vcfweb -f ./docker-compose.yml up -d
 ```
