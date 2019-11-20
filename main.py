@@ -1,6 +1,9 @@
 import flask
-from api import api
 import logging
+from globals import Globals
+from flask_restplus import Api
+from upload import api as upload
+from download import api as download
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
@@ -11,9 +14,19 @@ def index():
 
 app = flask.Flask(__name__)
 
+# home page
 app.add_url_rule('/', 'index', index)
+
+# parameters
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 app.config['MAX_CONTENT_LENGTH'] = 7.5e+8
+
+# configure endpoints
+api = Api(version=Globals.VERSION, title='Convert GWAS to VCF format',
+          description='A RESTful API for processing GWAS summary datasets', docExpansion='full',
+          doc='/docs/')
+api.add_namespace(upload)
+api.add_namespace(download)
 api.init_app(app)
 
 if __name__ == "__main__":

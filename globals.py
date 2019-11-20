@@ -2,7 +2,7 @@ class Globals:
     VERSION = '0.0.1'
     UPLOAD_FOLDER = '/data/gwas2vcf'
     CROMWELL_URL = 'http://cromwell:8000'
-    QC_WDL_PATH = '/app/qc.wdl'
+    QC_WDL_PATH = '/app/gwas2vcf.wdl'
 
     # host db
     RefGenomeFile = "/data/reference_genomes/released/2019-08-30/data/2.8/b37/human_g1k_v37.fasta"

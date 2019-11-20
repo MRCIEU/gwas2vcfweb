@@ -9,11 +9,7 @@ from flask_restplus import Api, Resource, Namespace
 from gwas_row_schema import GwasRowSchema
 import uuid
 
-api = Api(version=Globals.VERSION, title='Convert GWAS to VCF format',
-          description='A RESTful API for processing GWAS summary datasets', docExpansion='full',
-          doc='/docs/')
-
-api.add_namespace(Namespace('gwas2vcf', description="Process and harmonise GWAS to VCF format"))
+api = Namespace('txt', description="Process GWAS summary stats files")
 
 
 @api.route('/upload')
@@ -35,7 +31,7 @@ class Upload(Resource):
                         help="Path to GWAS summary stats text file for upload")
     parser.add_argument('gzipped', type=str, required=True, help="Is the file compressed with gzip?",
                         choices=('True', 'False'))
-    parser.add_argument('build', type=str, choices=('GRCh37'), required=True,
+    parser.add_argument('build', type=str, choices=('GRCh37',), required=True,
                         help='Genome build used to perform the GWAS study.')
     parser.add_argument('ncase_col', type=int, required=False, help="Column index for case sample size")
     parser.add_argument('snp_col', type=int, required=False, help="Column index for dbsnp rs-identifer")
