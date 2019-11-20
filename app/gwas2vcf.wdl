@@ -12,6 +12,7 @@ workflow gwas2vcf {
     # host db
     File RefGenomeFile
     File RefGenomeFileIdx
+    File RefGenomeFileDict
     File DbSnpVcfFile
     File DbSnpVcfFileIdx
     File AfVcfFile
@@ -241,6 +242,7 @@ task validate {
     File VcfFileInIdx
     File RefGenomeFile
     File RefGenomeFileIdx
+    File RefGenomeFileDict
     String VcfFileOutPath
 
     command <<<

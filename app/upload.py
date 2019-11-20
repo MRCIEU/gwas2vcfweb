@@ -185,6 +185,7 @@ class Upload(Resource):
 
         wdl['gwas2vcf.RefGenomeFile'] = Globals.RefGenomeFile
         wdl['gwas2vcf.RefGenomeFileIdx'] = Globals.RefGenomeFileIdx
+        wdl['gwas2vcf.RefGenomeFileDict'] = Globals.RefGenomeFileDict
         wdl['gwas2vcf.DbSnpVcfFile'] = Globals.DbSnpVcfFile
         wdl['gwas2vcf.DbSnpVcfFileIdx'] = Globals.DbSnpVcfFileIdx
         wdl['gwas2vcf.AfVcfFile'] = Globals.AfVcfFile

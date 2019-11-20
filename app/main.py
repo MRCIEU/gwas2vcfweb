@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(mess
 
 
 def index():
-    return flask.render_template('index.html')
+    return flask.send_file('index.html')
 
 
 app = flask.Flask(__name__)
@@ -32,4 +32,4 @@ api.init_app(app)
 
 if __name__ == "__main__":
     logging.info("Starting server")
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, debug=True)
