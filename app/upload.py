@@ -17,6 +17,8 @@ api = Namespace('txt', description="Convert GWAS summary stats files")
 @api.doc(description="Upload GWAS summary stats file")
 class Upload(Resource):
     parser = api.parser()
+
+    # gwas2vcf params
     parser.add_argument('chr_col', type=int, required=True, help="Column index for chromosome")
     parser.add_argument('pos_col', type=int, required=True, help="Column index for base position")
     parser.add_argument('ea_col', type=int, required=True, help="Column index for effect allele")
@@ -28,12 +30,6 @@ class Upload(Resource):
                         help="Column delimiter for file")
     parser.add_argument('header', type=str, required=True, help="Does the file have a header line?",
                         choices=('True', 'False'))
-    parser.add_argument('gwas_file', location='files', type=FileStorage, required=True,
-                        help="Path to GWAS summary stats text file for upload")
-    parser.add_argument('gzipped', type=str, required=True, help="Is the file compressed with gzip?",
-                        choices=('True', 'False'))
-    parser.add_argument('build', type=str, choices=('GRCh37',), required=True,
-                        help='Genome build used to perform the GWAS study.')
     parser.add_argument('ncase_col', type=int, required=False, help="Column index for case sample size")
     parser.add_argument('snp_col', type=int, required=False, help="Column index for dbsnp rs-identifer")
     parser.add_argument('eaf_col', type=int, required=False,
@@ -46,10 +42,18 @@ class Upload(Resource):
                         help="Column number for summary statistics imputation INFO score")
     parser.add_argument('ncontrol_col', type=int, required=False,
                         help="Column index for control sample size; total sample size if continuous trait")
-    parser.add_argument('cohort_controls', type=int, required=False,
-                        help="Total number of controls used in study")
+    parser.add_argument('build', type=str, choices=('GRCh37',), required=True,
+                        help='Genome build used to perform the GWAS study.')
     parser.add_argument('cohort_cases', type=int, required=False,
                         help="Total number of cases used in study")
+    parser.add_argument('cohort_controls', type=int, required=False,
+                        help="Total number of controls used in study")
+
+    # other args
+    parser.add_argument('gwas_file', location='files', type=FileStorage, required=True,
+                        help="Path to GWAS summary stats text file for upload")
+    parser.add_argument('gzipped', type=str, required=True, help="Is the file compressed with gzip?",
+                        choices=('True', 'False'))
 
     @staticmethod
     def validate_row_with_schema(line_split, args):
@@ -92,8 +96,8 @@ class Upload(Resource):
         args = self.parser.parse_args()
 
         # create job identifier
-        args['job_id'] = str(uuid.uuid1())
-        logging.info("Starting job {}".format(args['job_id']))
+        job_id = str(uuid.uuid1())
+        logging.info("Starting job {}".format(job_id))
 
         # convert to 0-based indexing
         args['chr_col'] = Upload.__convert_index(args['chr_col'])
@@ -123,20 +127,20 @@ class Upload(Resource):
         args['gzipped'] = (args['gzipped'] == "True")
 
         # create job directory
-        job_dir = os.path.join(Globals.UPLOAD_FOLDER, args['job_id'])
+        job_dir = os.path.join(Globals.UPLOAD_FOLDER, job_id)
         logging.info("Creating job directory: {}".format(job_dir))
         os.mkdir(job_dir)
 
         # upload file
         if args['gzipped']:
-            output_filename = '{}.txt.gz'.format(args['job_id'])
+            output_filename = '{}.txt.gz'.format(job_id)
             output_path = os.path.join(job_dir, output_filename)
 
             logging.info("Saving to {}".format(output_path))
             args['gwas_file'].save(output_path)
             f = gzip.open(output_path, 'rt')
         else:
-            output_filename = '{}.txt'.format(args['job_id'])
+            output_filename = '{}.txt'.format(job_id)
             output_path = os.path.join(job_dir, output_filename)
 
             logging.info("Saving to {}".format(output_path))
@@ -170,7 +174,7 @@ class Upload(Resource):
         # set WDL params
         wdl = dict()
 
-        wdl['gwas2vcf.JobId'] = args['job_id']
+        wdl['gwas2vcf.JobId'] = job_id
         wdl['gwas2vcf.SumStatsFilename'] = output_filename
 
         if 'cohort_cases' in args and args['cohort_cases'] is not None:
@@ -194,12 +198,16 @@ class Upload(Resource):
         # write out params for gwas2vcf
         logging.info("Writing out pipeline parameters")
 
-        # drop None values & gwas file which cannot be serialized
+        # drop None values
         j = dict()
         for k in args:
             if args[k] is not None:
                 j[k] = args[k]
+
+        # drop non-gwas2vcf args & non-serializable
         del j['gwas_file']
+        del j['job_id']
+        del j['gzipped']
 
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
             json.dump(j, f)
@@ -213,4 +221,4 @@ class Upload(Resource):
         assert r.status_code == 201
         assert r.json()['status'] == "Submitted"
 
-        return {'job': args['job_id']}, 201
+        return {'job': job_id}, 201
