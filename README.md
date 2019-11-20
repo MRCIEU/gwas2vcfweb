@@ -21,8 +21,16 @@ mkdir -p /data/gwas2vcfweb/data
 ## DB files
 # TODO
 
-# build & start stack
+# build stack
 docker-compose build --no-cache
+
+## this hash MUST be the same as in the wdl file
+cd gwas2vcf
+hash=$(git rev-parse HEAD)
+docker build --no-cache -t gwas2vcf:"$hash" .
+
+# start
+cd ..
 docker-compose -p gwas2vcfweb -f ./docker-compose.yml up -d
 ```
 
