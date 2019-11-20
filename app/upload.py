@@ -45,9 +45,9 @@ class Upload(Resource):
                         help="Column number for summary statistics imputation INFO score")
     parser.add_argument('ncontrol_col', type=int, required=False,
                         help="Column index for control sample size; total sample size if continuous trait")
-    parser.add_argument('ncontrol', type=int, required=False,
+    parser.add_argument('cohort_controls', type=int, required=False,
                         help="Total number of controls used in study")
-    parser.add_argument('ncases', type=int, required=False,
+    parser.add_argument('cohort_cases', type=int, required=False,
                         help="Total number of cases used in study")
 
     @staticmethod
@@ -118,13 +118,15 @@ class Upload(Resource):
 
         # convert text to bool
         args['header'] = (args['header'] == "True")
+        args['gzipped'] = (args['gzipped'] == "True")
+        args['header'] = (args['header'] == "True")
 
         # create job directory
         job_dir = os.path.join(Globals.UPLOAD_FOLDER, args['job_id'])
         os.mkdir(job_dir)
 
         # upload file
-        if args['gzipped'] == 'True':
+        if args['gzipped']:
             output_filename = '{}.txt.gz'.format(args['job_id'])
             args['gwas_file'].save(os.path.join(job_dir, output_filename))
             f = gzip.open(os.path.join(job_dir, output_filename), 'rt')
@@ -134,7 +136,7 @@ class Upload(Resource):
             f = open(os.path.join(job_dir, output_filename), 'r')
 
         # check file is valid
-        if args['header'] == 'True':
+        if args['header']:
             f.readline()
 
         try:
@@ -154,14 +156,15 @@ class Upload(Resource):
 
         # set WDL params
         wdl = dict()
+
         wdl['gwas2vcf.JobId'] = args['job_id']
         wdl['gwas2vcf.SumStatsFilename'] = output_filename
 
-        if 'ncase' in args and args['ncase'] is not None:
-            wdl['gwas2vcf.Cases'] = args['ncase']
+        if 'cohort_cases' in args and args['cohort_cases'] is not None:
+            wdl['gwas2vcf.Cases'] = args['cohort_cases']
 
-        if 'ncontrol' in args and args['ncontrol'] is not None:
-            wdl['gwas2vcf.Controls'] = args['ncontrol']
+        if 'cohort_controls' in args and args['cohort_controls'] is not None:
+            wdl['gwas2vcf.Controls'] = args['cohort_controls']
 
         wdl['gwas2vcf.RefGenomeFile'] = Globals.RefGenomeFile
         wdl['gwas2vcf.RefGenomeFileIdx'] = Globals.RefGenomeFileIdx
@@ -170,9 +173,11 @@ class Upload(Resource):
         wdl['gwas2vcf.AfVcfFile'] = Globals.AfVcfFile
         wdl['gwas2vcf.AfVcfFileIdx'] = Globals.AfVcfFileIdx
 
+        # write out params for WDL
         with open(os.path.join(job_dir, 'wdl.json'), 'w') as f:
             json.dump(wdl, f)
 
+        # write out params for gwas2vcf
         del args['gwas_file']
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
             json.dump(args, f)
@@ -181,6 +186,7 @@ class Upload(Resource):
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
                           files={'workflowSource': open(Globals.QC_WDL_PATH, 'rb'),
                                  'workflowInputs': open(os.path.join(job_dir, 'wdl.json'), 'rb')})
+        
         assert r.status_code == 201
         assert r.json()['status'] == "Submitted"
 

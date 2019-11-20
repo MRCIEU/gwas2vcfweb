@@ -22,9 +22,9 @@ workflow gwas2vcf {
             MountDir=MountDir,
             VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_harm.vcf.gz",
             SumStatsFile=BaseDir + "/" + JobId + "/" + SumStatsFilename,
+            ParamFile=BaseDir + "/" + JobId + "/upload.json",
             RefGenomeFile=RefGenomeFile,
             RefGenomeFileIdx=RefGenomeFileIdx,
-            ParamFile=BaseDir + "/" + JobId + "/" + JobId + "_harm.vcf.gz",
             JobId=JobId,
             Cases=Cases,
             Controls=Controls
