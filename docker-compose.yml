@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.web
     restart: always
     ports:
-    - "8200:80"
+    - "8400:80"
     volumes:
     - /etc/timezone:/etc/timezone:ro
     environment:
