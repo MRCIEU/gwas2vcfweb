@@ -1,6 +1,6 @@
-venv
+app/venv/
 *pyc
 *DS_Store
-.idea
+app/.idea/
 __pycache__
 .pytest_cache
