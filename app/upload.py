@@ -206,7 +206,6 @@ class Upload(Resource):
 
         # drop non-gwas2vcf args & non-serializable
         del j['gwas_file']
-        del j['job_id']
         del j['gzipped']
 
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
