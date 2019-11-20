@@ -87,7 +87,7 @@ class Upload(Resource):
         args = self.parser.parse_args()
 
         # create job identifier
-        args['job_id'] = uuid.uuid1()
+        args['job_id'] = str(uuid.uuid1())
 
         # convert to 0-based indexing
         args['chr_col'] = Upload.__convert_index(args['chr_col'])
