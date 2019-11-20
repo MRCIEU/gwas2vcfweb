@@ -5,13 +5,21 @@ Web interface for processing GWAS summary data to VCF format
 ## Install
 
 ```sh
+
 # get source
 git clone --recurse-submodules git@github.com:MRCIEU/gwas2vcfweb.git
 cd gwas2vcfweb
 
 # configure host
-mkdir -p /data/gwas2vcf
-# TODO install DBs
+
+## store cromwell outputs here
+mkdir -p /data/gwas2vcfweb
+
+## upload & download from here
+mkdir -p /data/gwas2vcfweb/data
+
+## DB files
+# TODO
 
 # start stack
 docker-compose build --no-cache

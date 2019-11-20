@@ -7,7 +7,7 @@ workflow gwas2vcf {
 
     # host dir
     String MountDir = "/data"
-    String BaseDir = "/data/gwas2vcf"
+    String BaseDir = "/data/gwas2vcfweb/data"
 
     # host db
     File RefGenomeFile
