@@ -2,8 +2,8 @@ import requests
 import os
 
 
-def test_upload(url):
-    r = requests.post(url + "/txt/upload", data={
+def test_upload():
+    r = requests.post("http://localhost/txt/upload", data={
         'chr_col': 1,
         'pos_col': 2,
         'snp_col': 3,

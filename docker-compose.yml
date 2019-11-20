@@ -9,6 +9,7 @@ services:
     ports:
     - "8400:80"
     volumes:
+    - /data:/data
     - /etc/timezone:/etc/timezone:ro
     environment:
       - NGINX_MAX_UPLOAD=750m
