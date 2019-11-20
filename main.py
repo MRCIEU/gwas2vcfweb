@@ -20,6 +20,7 @@ app.add_url_rule('/', 'index', index)
 # parameters
 app.config.SWAGGER_UI_DOC_EXPANSION = 'list'
 app.config['MAX_CONTENT_LENGTH'] = 7.5e+8
+app.config['ERROR_404_HELP'] = False
 
 # configure endpoints
 api = Api(version=Globals.VERSION, title='Convert GWAS to VCF format',

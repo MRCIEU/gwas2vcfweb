@@ -9,7 +9,7 @@ from flask_restplus import Api, Resource, Namespace
 from gwas_row_schema import GwasRowSchema
 import uuid
 
-api = Namespace('txt', description="Process GWAS summary stats files")
+api = Namespace('txt', description="Convert GWAS summary stats files")
 
 
 @api.route('/upload')
@@ -112,13 +112,17 @@ class Upload(Resource):
         elif args['delimiter'] == "space":
             args['delimiter'] = " "
 
+        # create job directory
+        job_dir = os.path.join(Globals.UPLOAD_FOLDER, args['job_id'])
+        os.mkdir(job_dir)
+
         # upload file
         if args['gzipped'] == 'True':
-            output_path = os.path.join(Globals.UPLOAD_FOLDER, '{}.txt.gz'.format(args['job_id']))
+            output_path = os.path.join(job_dir, '{}.txt.gz'.format(args['job_id']))
             args['gwas_file'].save(output_path)
             f = gzip.open(output_path, 'rt')
         else:
-            output_path = os.path.join(Globals.UPLOAD_FOLDER, '{}.txt'.format(args['job_id']))
+            output_path = os.path.join(job_dir, '{}.txt'.format(args['job_id']))
             args['gwas_file'].save(output_path)
             f = open(output_path, 'r')
 
@@ -141,14 +145,14 @@ class Upload(Resource):
         except IndexError as e:
             return {'message': 'Check column numbers and separator: {}'.format(e)}, 400
 
-        with open(os.path.join(Globals.UPLOAD_FOLDER, '{}.json'.format(args['job_id'])), 'w') as f:
+        with open(os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'w') as f:
             json.dump(args, f)
 
         # add to workflow queue
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
                           files={'workflowSource': open(Globals.QC_WDL_PATH, 'rb'),
                                  'workflowInputs': open(
-                                     os.path.join(Globals.UPLOAD_FOLDER, '{}.json'.format(args['job_id'])), 'rb')})
+                                     os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'rb')})
         assert r.status_code == 201
         assert r.json()['status'] == "Submitted"
 
