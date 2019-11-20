@@ -194,6 +194,9 @@ class Upload(Resource):
         # write out params for gwas2vcf
         logging.info("Writing out pipeline parameters")
         del args['gwas_file']
+        for k in args:
+            if args[k] is None:
+                del args[k]
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
             json.dump(args, f)
 
