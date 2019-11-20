@@ -18,7 +18,7 @@ def test_upload():
         'header': 'True',
         'gzipped': 'False',
         'build': 'GRCh37'
-    }, files={'gwas_file': open(os.path.join('tests', 'data', 'example.1k.txt'), 'rb')})
+    }, files={'gwas_file': open(os.path.join('tests', 'data', 'example.1k.txt'), 'r')})
 
     assert r.status_code == 201
     assert 'job' in r.json()

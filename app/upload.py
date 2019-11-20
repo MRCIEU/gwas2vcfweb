@@ -8,6 +8,7 @@ from globals import Globals
 from flask_restplus import Api, Resource, Namespace
 from gwas_row_schema import GwasRowSchema
 import uuid
+import logging
 
 api = Namespace('txt', description="Convert GWAS summary stats files")
 
@@ -92,6 +93,7 @@ class Upload(Resource):
 
         # create job identifier
         args['job_id'] = str(uuid.uuid1())
+        logging.info("Starting job {}".format(args['job_id']))
 
         # convert to 0-based indexing
         args['chr_col'] = Upload.__convert_index(args['chr_col'])
@@ -128,18 +130,24 @@ class Upload(Resource):
         # upload file
         if args['gzipped']:
             output_filename = '{}.txt.gz'.format(args['job_id'])
+
+            logging.info("Saving to {}".format(output_filename))
             args['gwas_file'].save(os.path.join(job_dir, output_filename))
             f = gzip.open(os.path.join(job_dir, output_filename), 'rt')
         else:
             output_filename = '{}.txt'.format(args['job_id'])
+
+            logging.info("Saving to {}".format(output_filename))
             args['gwas_file'].save(os.path.join(job_dir, output_filename))
             f = open(os.path.join(job_dir, output_filename), 'r')
 
         # check file is valid
         if args['header']:
+            logging.info("Skipping header")
             f.readline()
 
         try:
+            logging.info("Checking file format meets specification")
             n = 0
             for line in f:
                 n += 1
@@ -174,10 +182,12 @@ class Upload(Resource):
         wdl['gwas2vcf.AfVcfFileIdx'] = Globals.AfVcfFileIdx
 
         # write out params for WDL
+        logging.info("Writing out WDL parameters")
         with open(os.path.join(job_dir, 'wdl.json'), 'w') as f:
             json.dump(wdl, f)
 
         # write out params for gwas2vcf
+        logging.info("Writing out pipeline parameters")
         del args['gwas_file']
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
             json.dump(args, f)
@@ -186,7 +196,7 @@ class Upload(Resource):
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
                           files={'workflowSource': open(Globals.QC_WDL_PATH, 'rb'),
                                  'workflowInputs': open(os.path.join(job_dir, 'wdl.json'), 'rb')})
-        
+
         assert r.status_code == 201
         assert r.json()['status'] == "Submitted"
 
