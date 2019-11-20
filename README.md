@@ -14,6 +14,7 @@ mkdir -p /data/gwas2vcf
 # TODO install DBs
 
 # start stack
+docker-compose build --no-cache
 docker-compose -p gwas2vcfweb -f ./docker-compose.yml up -d
 ```
 

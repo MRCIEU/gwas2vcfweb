@@ -15,6 +15,7 @@ services:
       - NGINX_MAX_UPLOAD=750m
       - UWSGI_PROCESSES=20
       - UWSGI_THREADS=2
+      - FLASK_ENV=development
     depends_on:
       - cromwell
     healthcheck:
