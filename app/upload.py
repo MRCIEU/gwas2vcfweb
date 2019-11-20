@@ -193,12 +193,16 @@ class Upload(Resource):
 
         # write out params for gwas2vcf
         logging.info("Writing out pipeline parameters")
-        del args['gwas_file']
+
+        # drop None values & gwas file which cannot be serialized
+        j = dict()
         for k in args:
-            if args[k] is None:
-                del args[k]
+            if args[k] is not None:
+                j[k] = args[k]
+        del j['gwas_file']
+
         with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
-            json.dump(args, f)
+            json.dump(j, f)
 
         # add to workflow queue
         logging.info("Send POST request to cromwell for analysis")
