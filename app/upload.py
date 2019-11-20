@@ -116,19 +116,22 @@ class Upload(Resource):
         elif args['delimiter'] == "space":
             args['delimiter'] = " "
 
+        # convert text to bool
+        args['header'] = (args['header'] == "True")
+
         # create job directory
         job_dir = os.path.join(Globals.UPLOAD_FOLDER, args['job_id'])
         os.mkdir(job_dir)
 
         # upload file
         if args['gzipped'] == 'True':
-            output_path = os.path.join(job_dir, '{}.txt.gz'.format(args['job_id']))
-            args['gwas_file'].save(output_path)
-            f = gzip.open(output_path, 'rt')
+            output_filename = '{}.txt.gz'.format(args['job_id'])
+            args['gwas_file'].save(os.path.join(job_dir, output_filename))
+            f = gzip.open(os.path.join(job_dir, output_filename), 'rt')
         else:
-            output_path = os.path.join(job_dir, '{}.txt'.format(args['job_id']))
-            args['gwas_file'].save(output_path)
-            f = open(output_path, 'r')
+            output_filename = '{}.txt'.format(args['job_id'])
+            args['gwas_file'].save(os.path.join(job_dir, output_filename))
+            f = open(os.path.join(job_dir, output_filename), 'r')
 
         # check file is valid
         if args['header'] == 'True':
@@ -152,7 +155,7 @@ class Upload(Resource):
         # set WDL params
         wdl = dict()
         wdl['gwas2vcf.JobId'] = args['job_id']
-        wdl['gwas2vcf.SumStatsFilename'] = output_path
+        wdl['gwas2vcf.SumStatsFilename'] = output_filename
 
         if 'ncase' in args and args['ncase'] is not None:
             wdl['gwas2vcf.Cases'] = args['ncase']
@@ -167,14 +170,17 @@ class Upload(Resource):
         wdl['gwas2vcf.AfVcfFile'] = Globals.AfVcfFile
         wdl['gwas2vcf.AfVcfFileIdx'] = Globals.AfVcfFileIdx
 
-        with open(os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'w') as f:
+        with open(os.path.join(job_dir, 'wdl.json'), 'w') as f:
             json.dump(wdl, f)
+
+        del args['gwas_file']
+        with open(os.path.join(job_dir, 'upload.json'), 'w') as f:
+            json.dump(args, f)
 
         # add to workflow queue
         r = requests.post(Globals.CROMWELL_URL + "/api/workflows/v1",
                           files={'workflowSource': open(Globals.QC_WDL_PATH, 'rb'),
-                                 'workflowInputs': open(
-                                     os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'rb')})
+                                 'workflowInputs': open(os.path.join(job_dir, 'wdl.json'), 'rb')})
         assert r.status_code == 201
         assert r.json()['status'] == "Submitted"
 

@@ -20,11 +20,11 @@ workflow gwas2vcf {
     call vcf {
         input:
             MountDir=MountDir,
-            VcfFileOutPath=BaseDir + "/" + JobId + "_harm.vcf.gz",
-            SumStatsFile=BaseDir + "/" + SumStatsFilename,
+            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_harm.vcf.gz",
+            SumStatsFile=BaseDir + "/" + JobId + "/" + SumStatsFilename,
             RefGenomeFile=RefGenomeFile,
             RefGenomeFileIdx=RefGenomeFileIdx,
-            ParamFile=BaseDir + "/" + JobId + "/raw/upload.json",
+            ParamFile=BaseDir + "/" + JobId + "/" + JobId + "_harm.vcf.gz",
             JobId=JobId,
             Cases=Cases,
             Controls=Controls
@@ -62,7 +62,8 @@ workflow gwas2vcf {
             VcfFileIn=annotate_af.VcfFile,
             VcfFileInIdx=annotate_af.VcfFileIdx,
             RefGenomeFile=RefGenomeFile,
-            RefGenomeFileIdx=RefGenomeFileIdx
+            RefGenomeFileIdx=RefGenomeFileIdx,
+            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz"
     }
 
 }
@@ -240,6 +241,7 @@ task validate {
     File VcfFileInIdx
     File RefGenomeFile
     File RefGenomeFileIdx
+    String VcfFileOutPath
 
     command <<<
         set -e
@@ -254,6 +256,14 @@ task validate {
         -V ${VcfFileIn} \
         -R ${RefGenomeFile}
 
+        # move to complete
+        cp ${VcfFileIn} ${VcfFileOutPath}
+        cp ${VcfFileIn} + ".tbi" ${VcfFileOutPath} + ".tbi"
+
     >>>
 
+    output {
+        File VcfFile = "${VcfFileOutPath}"
+        File VcfFileIdx = "${VcfFileOutPath}.tbi"
+    }
 }
