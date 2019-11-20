@@ -145,6 +145,9 @@ class Upload(Resource):
         except IndexError as e:
             return {'message': 'Check column numbers and separator: {}'.format(e)}, 400
 
+        # drop non-serializable
+        del args['gwas_file']
+
         with open(os.path.join(job_dir, '{}.json'.format(args['job_id'])), 'w') as f:
             json.dump(args, f)
 
