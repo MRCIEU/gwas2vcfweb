@@ -32,15 +32,17 @@
         <hr class="my-4 bg-light">
         <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
             (manuscript in preparation). Please fill in as much information as possible.</p>
-        <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can download your data
+        <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can check status of your
+            data
             by providing the job identifier below.</p>
         <form class="form-inline my-2 my-lg-0">
             <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
                    aria-label="Search">
             <a id="search-job-btn" href="" class="btn btn-primary"><i
-                    class="fas fa-download"></i>&nbsp;Download</a>
+                    class="fas fa-question"></i>&nbsp;Status</a>
         </form>
     </div>
+    <div id="search-result" class="alert hidden" role="alert"></div>
     <div class="card" id="submit-form">
         <h5 class="card-header">Upload</h5>
         <div class="card-body">
@@ -173,7 +175,8 @@
     <div id="server-message" class="alert hidden" role="alert"></div>
     <footer class="container">
         <p>Need help? Want to host your own pipeline visit the <a target="_blank"
-                                                                     href="https://github.com/MRCIEU/gwas2vcfweb">GitHub</a></p>
+                                                                  href="https://github.com/MRCIEU/gwas2vcfweb">GitHub</a>
+        </p>
         <p>&copy; 2019 University of Bristol. All rights reserved.</p>
     </footer>
 </div>
@@ -181,8 +184,35 @@
     $(document).ready(function () {
         $("#search-job-btn").click(function () {
             var jobid = $("#search-job-val").val();
-            $("#search-job-btn").attr("href", "/vcf/download?job_id=" + jobid);
+            $("#search-job-btn").attr("href", "/vcf/status?job_id=" + jobid);
         });
+
+        $("#search-job-btn").click(function () {
+            var job = $("#search-job-val").val();
+            formdata = new FormData();
+            formdata.append("job_id", job);
+
+            $.ajax({
+                type: 'GET',
+                url: "/vcf/status",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log(data);
+                    $( "#search-result" ).text( data.message ).addClass( "alert-success" ).removeClass( "hidden" );
+                    if ('vcf_uri' in data){
+                        $( "#search-result" ).append( "<a href=\"" + data.message.vcf_uri "\">VCF</a> <a href=\"" + data.message.tbi_uri "\">Index</a>");
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    $( "#search-result" ).text( data.message ).addClass( "alert-danger" ).removeClass( "hidden" );
+                }
+            });
+
+        });
+
         $("#submit-job-btn").click(function () {
 
             // get variables
@@ -313,6 +343,7 @@
 
 
 
+
 </script>
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -333,6 +364,7 @@
     });
   }, false);
 })();
+
 
 
 

@@ -2,6 +2,10 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6
 
 RUN echo "uwsgi_read_timeout 1200s;" > /etc/nginx/conf.d/custom_timeout.conf
 
+# serve static files using nginx
+ENV STATIC_INDEX 1
+ENV STATIC_PATH /data/gwas2vcfweb/data
+
 # install flask app
 COPY ./app /app
 WORKDIR /app

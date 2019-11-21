@@ -3,7 +3,7 @@ import logging
 from globals import Globals
 from flask_restplus import Api
 from upload import api as upload
-from download import api as download
+from status import api as status
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
@@ -27,7 +27,7 @@ api = Api(version=Globals.VERSION, title='Convert GWAS to VCF format',
           description='A RESTful API for processing GWAS summary datasets', docExpansion='full',
           doc='/docs/')
 api.add_namespace(upload)
-api.add_namespace(download)
+api.add_namespace(status)
 api.init_app(app)
 
 if __name__ == "__main__":
