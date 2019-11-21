@@ -9,28 +9,37 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
     <title>gwas2vcf</title>
 </head>
 <body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="/static/index.js"></script>
-
 <div class="container">
-    <div class="jumbotron">
+    <div class="jumbotron bg-dark text-white">
         <h1 class="display-4">Convert GWAS to VCF format</h1>
-        <p class="lead">This form provides easy conversion from GWAS summary statistics in plain text to the VCF format</p>
-        <hr class="my-4">
-        <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses. Manuscript in preparation.</p>
+        <p class="lead">This form converts GWAS summary statistics in plain text to the VCF
+            format</p>
+        <hr class="my-4 bg-light">
+        <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
+            (manuscript in preparation). Please fill in as much information as possible.</p>
+        <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can download your data
+            by providing the job identifier below.</p>
+        <form class="form-inline my-2 my-lg-0">
+            <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
+                   aria-label="Search">
+            <a id="search-job-btn" href="" class="btn btn-primary"><i
+                    class="fas fa-download"></i>&nbsp;Download</a>
+        </form>
     </div>
     <div class="card" id="submit-form">
         <h5 class="card-header">Upload</h5>
@@ -143,8 +152,8 @@
                     </div>
                 </div>
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <input type="file" class="custom-file-input" id="gwas_file">
+                    <label class="custom-file-label" for="gwas_file">Choose file</label>
                 </div>
                 <div class="form-group">
                     <div class="form-check">
@@ -157,11 +166,144 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Submit form</button>
+                <a id="submit-job-btn" type="button" class="btn btn-primary">Submit form</a>
             </form>
         </div>
     </div>
+    <footer class="container">
+        <p>Need help? Or want to host your own pipeline visit the <a target="_blank" href="https://github.com/MRCIEU/gwas2vcfweb">github pages here</a></p>
+        <p>&copy; 2019 University of Bristol. All rights reserved.</p>
+    </footer>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#search-job-btn").click(function () {
+            var jobid = $("#search-job-val").val();
+            $("#search-job-btn").attr("href", "/vcf/download?job_id=" + jobid);
+        });
+        $("#submit-job-btn").click(function () {
+
+            // get variables
+            var chr_col = $("#chr_col").val();
+            var pos_col = $("#pos_col").val();
+            var ea_col = $("#ea_col").val();
+            var oa_col = $("#oa_col").val();
+            var beta_col = $("#beta_col").val();
+            var se_col = $("#se_col").val();
+            var pval_col = $("#pval_col").val();
+            var delimiter = $("#delimiter").val();
+            var header = $("#header").val();
+            var build = $("#build").val();
+            var gzipped = $("#gzipped").val();
+
+            // optional
+            var ncase_col = $("#ncase_col").val();
+            var snp_col = $("#snp_col").val();
+            var eaf_col = $("#eaf_col").val();
+            var oaf_col = $("#oaf_col").val();
+            var imp_z_col = $("#imp_z_col").val();
+            var imp_info_col = $("#imp_info_col").val();
+            var ncontrol_col = $("#ncontrol_col").val();
+            var cohort_cases = $("#cohort_cases").val();
+            var cohort_controls = $("#cohort_controls").val();
+
+            // check numerics
+            if (!$.isNumeric(chr_col)) {
+                alert("You must provide a numeric column number for chromosome");
+                return;
+            }
+            if (!$.isNumeric(pos_col)) {
+                alert("You must provide a numeric column number for position");
+                return;
+            }
+            if (!$.isNumeric(ea_col)) {
+                alert("You must provide a numeric column number for effect allele");
+                return;
+            }
+            if (!$.isNumeric(oa_col)) {
+                alert("You must provide a numeric column number for other allele");
+                return;
+            }
+            if (!$.isNumeric(beta_col)) {
+                alert("You must provide a numeric column number for effect size");
+                return;
+            }
+            if (!$.isNumeric(se_col)) {
+                alert("You must provide a numeric column number for SE");
+                return;
+            }
+            if (!$.isNumeric(pval_col)) {
+                alert("You must provide a numeric column number for P value");
+                return;
+            }
+            if (!$("#invalidCheck").is(':checked')) {
+                alert("You must agree to our terms");
+                return;
+            }
+
+            formdata = new FormData();
+            formdata.append("chr_col", chr_col);
+            formdata.append("pos_col", pos_col);
+            formdata.append("ea_col", ea_col);
+            formdata.append("oa_col", oa_col);
+            formdata.append("beta_col", beta_col);
+            formdata.append("se_col", se_col);
+            formdata.append("pval_col", pval_col);
+            formdata.append("delimiter", delimiter);
+            formdata.append("header", header);
+            formdata.append("build", build);
+            formdata.append("gzipped", gzipped);
+
+            // get file
+            file = $('#gwas_file').prop('files')[0];
+            if (file === undefined){
+                alert("You must provide a file");
+            } else {
+                formdata.append("gwas_file", file);
+            }
+
+            if ($.isNumeric(ncase_col)) {
+                formdata.append("ncase_col", ncase_col);
+            }
+            if ($.isNumeric(snp_col)) {
+                formdata.append("snp_col", snp_col);
+            }
+            if ($.isNumeric(eaf_col)) {
+                formdata.append("eaf_col", eaf_col);
+            }
+            if ($.isNumeric(oaf_col)) {
+                formdata.append("oaf_col", oaf_col);
+            }
+            if ($.isNumeric(imp_z_col)) {
+                formdata.append("imp_z_col", imp_z_col);
+            }
+            if ($.isNumeric(imp_info_col)) {
+                formdata.append("imp_info_col", imp_info_col);
+            }
+            if ($.isNumeric(ncontrol_col)) {
+                formdata.append("ncontrol_col", ncontrol_col);
+            }
+            if ($.isNumeric(cohort_cases)) {
+                formdata.append("cohort_cases", cohort_cases);
+            }
+            if ($.isNumeric(cohort_controls)) {
+                formdata.append("cohort_controls", cohort_controls);
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "/txt/upload",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log("success");
+                }
+            });
+
+        });
+    });
+</script>
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (function() {
@@ -181,9 +323,6 @@
     });
   }, false);
 })();
-
-
-
 </script>
 </body>
 </html>
