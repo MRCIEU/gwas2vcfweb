@@ -170,8 +170,11 @@
             </form>
         </div>
     </div>
+    <div id="server-message" class="alert hidden" role="alert"></div>
     <footer class="container">
-        <p>Need help? Or want to host your own pipeline visit the <a target="_blank" href="https://github.com/MRCIEU/gwas2vcfweb">github pages here</a></p>
+        <p>Need help? Or want to host your own pipeline visit the <a target="_blank"
+                                                                     href="https://github.com/MRCIEU/gwas2vcfweb">github
+            pages here</a></p>
         <p>&copy; 2019 University of Bristol. All rights reserved.</p>
     </footer>
 </div>
@@ -297,12 +300,18 @@
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    console.log("success");
+                    $( "#server-message" ).text( data.responseText ).addClass( "alert-success" ).removeClass( "hidden" );
+                },
+                error: function (data) {
+                    $( "#server-message" ).text( data.responseText ).addClass( "alert-danger" ).removeClass( "hidden" );
                 }
             });
 
         });
     });
+
+
+
 </script>
 <script>
 // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -323,6 +332,9 @@
     });
   }, false);
 })();
+
+
+
 </script>
 </body>
 </html>
