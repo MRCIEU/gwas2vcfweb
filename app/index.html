@@ -38,7 +38,7 @@
         <form class="form-inline my-2 my-lg-0">
             <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
                    aria-label="Search">
-            <a id="search-job-btn" href="" class="btn btn-primary"><i
+            <a id="search-job-btn" type="button" class="btn btn-primary"><i
                     class="fas fa-question"></i>&nbsp;Status</a>
         </form>
     </div>
@@ -182,11 +182,6 @@
 </div>
 <script>
     $(document).ready(function () {
-        $("#search-job-btn").click(function () {
-            var jobid = $("#search-job-val").val();
-            $("#search-job-btn").attr("href", "/vcf/status?job_id=" + jobid);
-        });
-
         $("#search-job-btn").click(function () {
             var job = $("#search-job-val").val();
             formdata = new FormData();
