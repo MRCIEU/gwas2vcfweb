@@ -2,7 +2,6 @@ from globals import Globals
 from flask_restplus import Resource, Namespace
 from flask import jsonify
 import os
-from flask import abort
 import logging
 
 api = Namespace('vcf', description="Status for VCF file conversion")
@@ -26,7 +25,7 @@ class Download(Resource):
         # check job dir is valid
         if not os.path.isdir(job_dir):
             logging.error("Directory does not exist, check UUID")
-            return jsonify(message="Job {} does not exist on server".format(args['job_id'])), 404
+            return "Job {} does not exist on server".format(args['job_id']), 404
 
         # check output file is ready for download
         if not os.path.exists(os.path.join(job_dir, filename)):
