@@ -33,4 +33,5 @@ class Download(Resource):
             logging.info("No outputs available. Result are processing or failed")
             return jsonify(message="Job {} is not complete. Please check back later".format(args['job_id']))
 
-        return send_file(os.path.join(job_dir, filename), as_attachment=True)
+        return send_file(os.path.join(job_dir, filename), mimetype="application/x-gzip", attachment_filename=filename,
+                         as_attachment=True)
