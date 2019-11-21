@@ -1,8 +1,6 @@
 class Globals:
     VERSION = '0.0.1'
-    #UPLOAD_FOLDER = '/data/gwas2vcfweb/data'
-    UPLOAD_FOLDER = '/Users/matthewlyon/Downloads'
-
+    UPLOAD_FOLDER = '/data/gwas2vcfweb/data'
     CROMWELL_URL = 'http://cromwell:8000'
     QC_WDL_PATH = '/app/gwas2vcf.wdl'
 
