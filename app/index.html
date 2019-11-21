@@ -300,7 +300,7 @@
                 contentType: false,
                 success: function (data) {
                     console.log(data);
-                    $( "#server-message" ).text( data.responseText ).addClass( "alert-success" ).removeClass( "hidden" );
+                    $( "#server-message" ).text( "Submitted job " + data.job ).addClass( "alert-success" ).removeClass( "hidden" );
                 },
                 error: function (data) {
                     console.log(data);
