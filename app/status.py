@@ -33,5 +33,5 @@ class Download(Resource):
             return jsonify(message="Job {} is not complete. Please check back later".format(args['job_id']))
 
         return jsonify(message="Job {} is complete.".format(args['job_id']),
-                       vcf_uri="/data/" + args['job_id'] + "/" + filename,
-                       tbi_uri="/data/" + args['job_id'] + "/" + filename + ".tbi")
+                       vcf_uri="/vcf/download/job_id=" + args['job_id'] + "&file_type=vcf",
+                       tbi_uri="/vcf/download/job_id=" + args['job_id'] + "&file_type=tbi")

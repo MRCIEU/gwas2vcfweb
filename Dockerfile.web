@@ -8,4 +8,3 @@ RUN pip install -r requirements.txt
 
 # configure nginx
 RUN echo "uwsgi_read_timeout 1200s;" > /etc/nginx/conf.d/custom_timeout.conf
-COPY custom_download.conf /etc/nginx/conf.d/custom_download.conf
