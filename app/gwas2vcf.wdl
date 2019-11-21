@@ -64,6 +64,7 @@ workflow gwas2vcf {
             VcfFileInIdx=annotate_af.VcfFileIdx,
             RefGenomeFile=RefGenomeFile,
             RefGenomeFileIdx=RefGenomeFileIdx,
+            RefGenomeFileDict=RefGenomeFileDict,
             VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz"
     }
 
