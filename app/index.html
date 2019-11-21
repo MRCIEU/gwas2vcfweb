@@ -183,20 +183,20 @@
 <script>
     $(document).ready(function () {
         $("#search-job-btn").click(function () {
-            var job = $("#search-job-val").val();
-            formdata = new FormData();
-            formdata.append("job_id", job);
+            var job_id = $("#search-job-val").val();
+            data = {
+                "job_id": job_id
+            };
 
             $.ajax({
                 type: 'GET',
                 url: "/vcf/status",
-                data: formdata,
-                processData: false,
-                contentType: false,
+                data: JSON.stringify(data),
+                contentType: 'application/json',
                 success: function (data) {
                     console.log(data);
                     $( "#search-result" ).text( data.message ).addClass( "alert-success" ).removeClass( "hidden" );
-                    if ('vcf_uri' in data){
+                    if ('vcf_uri' in data.message){
                         $( "#search-result" ).append( "<a href=\"" + data.message.vcf_uri + "\">VCF</a> <a href=\"" + data.message.tbi_uri + "\">Index</a>");
                     }
                 },
