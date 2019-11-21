@@ -26,9 +26,9 @@ class Download(Resource):
         if args['file_type'] == "vcf":
             if not os.path.exists(os.path.join(job_dir, vcf)):
                 return "File does not exist", 404
-            return send_file(os.path.join(job_dir, vcf), as_attachment=True, attachment_filename=vcf)
+            return send_file(os.path.join(job_dir, vcf), as_attachment=True)
 
         if args['file_type'] == "tbi":
             if not os.path.exists(os.path.join(job_dir, tbi)):
                 return "File does not exist", 404
-            return send_file(os.path.join(job_dir, tbi), as_attachment=True, attachment_filename=tbi)
+            return send_file(os.path.join(job_dir, tbi), as_attachment=True)
