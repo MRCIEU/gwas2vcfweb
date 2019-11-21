@@ -1,6 +1,6 @@
 from globals import Globals
 from flask_restplus import Resource, Namespace
-from flask import send_from_directory, jsonify
+from flask import send_file, jsonify
 import os
 from flask import abort
 import logging
@@ -33,4 +33,4 @@ class Download(Resource):
             logging.info("No outputs available. Result are processing or failed")
             return jsonify(message="Job {} is not complete. Please check back later".format(args['job_id']))
 
-        return send_from_directory(directory=job_dir, filename=filename, as_attachment=True)
+        return send_file(os.path.join(job_dir, filename), as_attachment=True)
