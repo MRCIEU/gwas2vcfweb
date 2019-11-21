@@ -31,6 +31,6 @@ class Download(Resource):
         # check output file is ready for download
         if not os.path.exists(os.path.join(job_dir, filename)):
             logging.info("No outputs available. Result are processing or failed")
-            return jsonify(message="Job {} is not complete. Check back later".format(args['job_id']))
+            return jsonify(message="Job {} is not complete. Please check back later".format(args['job_id']))
 
-        return send_from_directory(directory=job_dir, filename=filename)
+        return send_from_directory(directory=job_dir, filename=filename, as_attachment=True)
