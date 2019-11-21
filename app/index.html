@@ -174,7 +174,7 @@
     </div>
     <div id="server-message" class="alert hidden" role="alert"></div>
     <footer class="container">
-        <p>Need help? Want to host your own pipeline visit the <a target="_blank"
+        <p>Need help? Want to host your own pipeline? Visit <a target="_blank"
                                                                   href="https://github.com/MRCIEU/gwas2vcfweb">GitHub</a>
         </p>
         <p>&copy; 2019 University of Bristol. All rights reserved.</p>
@@ -202,7 +202,7 @@
                 },
                 error: function (data) {
                     console.log(data);
-                    $( "#search-result" ).text( data.message ).addClass( "alert-danger" ).removeClass( "hidden" );
+                    $( "#search-result" ).text( data.responseText ).addClass( "alert-danger" ).removeClass( "hidden" );
                 }
             });
 
