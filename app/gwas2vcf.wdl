@@ -65,7 +65,8 @@ workflow gwas2vcf {
             RefGenomeFile=RefGenomeFile,
             RefGenomeFileIdx=RefGenomeFileIdx,
             RefGenomeFileDict=RefGenomeFileDict,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz"
+            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz",
+            VcfFileOutIdxPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz.tbi"
     }
 
 }
@@ -245,6 +246,7 @@ task validate {
     File RefGenomeFileIdx
     File RefGenomeFileDict
     String VcfFileOutPath
+    String VcfFileOutIdxPath
 
     command <<<
         set -e
@@ -261,12 +263,12 @@ task validate {
 
         # move to complete
         cp ${VcfFileIn} ${VcfFileOutPath}
-        cp ${VcfFileIn} + ".tbi" ${VcfFileOutPath} + ".tbi"
+        cp ${VcfFileInIdx} ${VcfFileOutIdxPath}
 
     >>>
 
     output {
         File VcfFile = "${VcfFileOutPath}"
-        File VcfFileIdx = "${VcfFileOutPath}.tbi"
+        File VcfFileIdx = "${VcfFileOutIdxPath}"
     }
 }
