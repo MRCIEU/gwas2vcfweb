@@ -48,3 +48,9 @@ docker exec -it gwas2vcfweb_web_1 pytest -v
 1. Point browser to ```http://<hostname>:8400```. Port can be configure in the [compose file](docker-compose.yml).
 2. Upload file & obtain job identifier
 3. Download results for job identifier
+
+## VM
+
+These instructions describe how to run the Docker stack inside a VM. This approach offers additional protection.
+
+Full details here: ```https://github.com/leighmcculloch/vagrant-docker-compose```
