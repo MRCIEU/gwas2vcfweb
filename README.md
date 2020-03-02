@@ -19,7 +19,32 @@ mkdir -p /data/gwas2vcfweb
 mkdir -p /data/gwas2vcfweb/data
 
 ## DB files
-# TODO
+
+### Reference FASTA
+mkdir -p /data/reference_genomes
+cd /data/reference_genomes
+wget ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/human_g1k_v37.fasta.gz
+wget ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/human_g1k_v37.fasta.fai.gz
+wget ftp://gsapubftp-anonymous@ftp.broadinstitute.org/bundle/b37/human_g1k_v37.dict.gz
+gzip -d human_g1k_v37.fasta.gz
+gzip -d human_g1k_v37.fasta.fai.gz
+gzip -d human_g1k_v37.dict.gz
+
+### 1kg
+mkdir -p /data/1kg
+cd /data/1kg
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz.tbi
+gzip -d ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz
+gzip -d ALL.wgs.phase3_shapeit2_mvncall_integrated_v5b.20130502.sites.vcf.gz.tbi
+
+### dbsnp
+mkdir -p /data/dbsnp
+cd /data/dbsnp
+wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz
+wget ftp://ftp.ncbi.nih.gov/snp/latest_release/VCF/GCF_000001405.25.gz.tbi
+mv GCF_000001405.25.gz dbsnp.v153.b37.vcf.gz
+mv GCF_000001405.25.gz.tbi dbsnp.v153.b37.vcf.gz.tbi
 
 # build stack
 docker-compose build --no-cache

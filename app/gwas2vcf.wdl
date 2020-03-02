@@ -39,35 +39,35 @@ workflow gwas2vcf {
             VcfFileInIdx=vcf.VcfFileIdx,
             VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_norm.vcf.gz"
     }
-    call annotate_dbsnp {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=combine_multiallelics.VcfFile,
-            VcfFileInIdx=combine_multiallelics.VcfFileIdx,
-            DbSnpVcfFile=DbSnpVcfFile,
-            DbSnpVcfFileIdx=DbSnpVcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_dbsnp.vcf.gz"
-    }
-    call annotate_af {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=annotate_dbsnp.VcfFile,
-            VcfFileInIdx=annotate_dbsnp.VcfFileIdx,
-            AfVcfFile=AfVcfFile,
-            AfVcfFileIdx=AfVcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_data.vcf.gz"
-    }
-    call validate {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=annotate_af.VcfFile,
-            VcfFileInIdx=annotate_af.VcfFileIdx,
-            RefGenomeFile=RefGenomeFile,
-            RefGenomeFileIdx=RefGenomeFileIdx,
-            RefGenomeFileDict=RefGenomeFileDict,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz",
-            VcfFileOutIdxPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz.tbi"
-    }
+    #call annotate_dbsnp {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=combine_multiallelics.VcfFile,
+    #        VcfFileInIdx=combine_multiallelics.VcfFileIdx,
+    #        DbSnpVcfFile=DbSnpVcfFile,
+    #        DbSnpVcfFileIdx=DbSnpVcfFileIdx,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_dbsnp.vcf.gz"
+    #}
+    #call annotate_af {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=annotate_dbsnp.VcfFile,
+    #        VcfFileInIdx=annotate_dbsnp.VcfFileIdx,
+    #        AfVcfFile=AfVcfFile,
+    #        AfVcfFileIdx=AfVcfFileIdx,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_data.vcf.gz"
+    #}
+    #call validate {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=annotate_af.VcfFile,
+    #        VcfFileInIdx=annotate_af.VcfFileIdx,
+    #        RefGenomeFile=RefGenomeFile,
+    #        RefGenomeFileIdx=RefGenomeFileIdx,
+    #        RefGenomeFileDict=RefGenomeFileDict,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz",
+    #        VcfFileOutIdxPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz.tbi"
+    #}
 
 }
 
