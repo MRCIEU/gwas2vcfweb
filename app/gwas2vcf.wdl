@@ -37,7 +37,7 @@ workflow gwas2vcf {
             RefGenomeFileIdx=RefGenomeFileIdx,
             VcfFileIn=vcf.VcfFile,
             VcfFileInIdx=vcf.VcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_norm.vcf.gz"
+            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_data.vcf.gz"
     }
     #call annotate_dbsnp {
     #    input:
