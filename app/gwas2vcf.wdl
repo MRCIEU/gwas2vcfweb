@@ -90,7 +90,7 @@ task vcf {
         --rm \
         -v ${MountDir}:${MountDir} \
         --cpus="1" \
-        gwas2vcf:a05a54ff5287606b3bfd537eb57e480c3e5d5f80 \
+        gwas2vcf:d18347a7b74f45a5d7cf0c441cbd353c62fb6831 \
         python /app/main.py \
         --data ${SumStatsFile} \
         --id ${JobId} \
