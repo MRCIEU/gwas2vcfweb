@@ -24,6 +24,11 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<style>
+    div.hidden {
+        display: none;
+    }
+</style>
 <div class="container">
     <div class="jumbotron bg-dark text-white">
         <h1 class="display-4">Convert GWAS to VCF format</h1>
@@ -330,14 +335,17 @@
                 success: function (data) {
                     console.log(data);
                     $( "#upload-spinner" ).addClass( "hidden" );
+                    $("#submit-job-btn").prop('disabled', false);
                     $( "#server-message" ).text( "Submitted job " + data.job ).addClass( "alert-success" ).removeClass( "hidden" );
                 },
                 error: function (data) {
                     console.log(data);
                     $( "#upload-spinner" ).addClass( "hidden" );
+                    $("#submit-job-btn").prop('disabled', false);
                     $( "#server-message" ).text( data.responseText ).addClass( "alert-danger" ).removeClass( "hidden" );
                 },
                 beforeSend: function() {
+                    $("#submit-job-btn").prop('disabled', true);
                     $( "#upload-spinner" ).removeClass( "hidden" );
                 }
             });
