@@ -37,37 +37,37 @@ workflow gwas2vcf {
             RefGenomeFileIdx=RefGenomeFileIdx,
             VcfFileIn=vcf.VcfFile,
             VcfFileInIdx=vcf.VcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_norm.vcf.gz"
+            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz"
     }
-    call annotate_dbsnp {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=combine_multiallelics.VcfFile,
-            VcfFileInIdx=combine_multiallelics.VcfFileIdx,
-            DbSnpVcfFile=DbSnpVcfFile,
-            DbSnpVcfFileIdx=DbSnpVcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_dbsnp.vcf.gz"
-    }
-    call annotate_af {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=annotate_dbsnp.VcfFile,
-            VcfFileInIdx=annotate_dbsnp.VcfFileIdx,
-            AfVcfFile=AfVcfFile,
-            AfVcfFileIdx=AfVcfFileIdx,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_data.vcf.gz"
-    }
-    call validate {
-        input:
-            MountDir=MountDir,
-            VcfFileIn=annotate_af.VcfFile,
-            VcfFileInIdx=annotate_af.VcfFileIdx,
-            RefGenomeFile=RefGenomeFile,
-            RefGenomeFileIdx=RefGenomeFileIdx,
-            RefGenomeFileDict=RefGenomeFileDict,
-            VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz",
-            VcfFileOutIdxPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz.tbi"
-    }
+    #call annotate_dbsnp {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=combine_multiallelics.VcfFile,
+    #        VcfFileInIdx=combine_multiallelics.VcfFileIdx,
+    #        DbSnpVcfFile=DbSnpVcfFile,
+    #        DbSnpVcfFileIdx=DbSnpVcfFileIdx,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_dbsnp.vcf.gz"
+    #}
+    #call annotate_af {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=annotate_dbsnp.VcfFile,
+    #        VcfFileInIdx=annotate_dbsnp.VcfFileIdx,
+    #        AfVcfFile=AfVcfFile,
+    #        AfVcfFileIdx=AfVcfFileIdx,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + "_data.vcf.gz"
+    #}
+    #call validate {
+    #    input:
+    #        MountDir=MountDir,
+    #        VcfFileIn=annotate_af.VcfFile,
+    #        VcfFileInIdx=annotate_af.VcfFileIdx,
+    #        RefGenomeFile=RefGenomeFile,
+    #        RefGenomeFileIdx=RefGenomeFileIdx,
+    #        RefGenomeFileDict=RefGenomeFileDict,
+    #        VcfFileOutPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz",
+    #        VcfFileOutIdxPath=BaseDir + "/" + JobId + "/" + JobId + ".vcf.gz.tbi"
+    #}
 
 }
 
@@ -90,7 +90,7 @@ task vcf {
         --rm \
         -v ${MountDir}:${MountDir} \
         --cpus="1" \
-        gwas2vcf:a05a54ff5287606b3bfd537eb57e480c3e5d5f80 \
+        gwas2vcf:d18347a7b74f45a5d7cf0c441cbd353c62fb6831 \
         python /app/main.py \
         --data ${SumStatsFile} \
         --id ${JobId} \
