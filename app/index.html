@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
           integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
-    <title>gwas2vcf</title>
+    <title>Gwas2VCF</title>
 </head>
 <body>
 <!-- Optional JavaScript -->
@@ -57,40 +57,73 @@
         <h5 class="card-header">Upload</h5>
         <div class="card-body">
             <form class="needs-validation" novalidate>
+                Enter file column numbers (starting at 1)
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="chr_col">Column index for chromosome</label>
-                        <input type="text" class="form-control" id="chr_col" required>
+                    <div class="col-sm">
+                        <label for="chr_col">Chromosome</label>
+                        <input type="number" class="form-control" id="chr_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="pos_col">Column index for base position</label>
-                        <input type="text" class="form-control" id="pos_col" required>
+                    <div class="col-sm">
+                        <label for="pos_col">Base position</label>
+                        <input type="number" class="form-control" id="pos_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="ea_col">Column index for effect allele</label>
-                        <input type="text" class="form-control" id="ea_col" required>
+                    <div class="col-sm">
+                        <label for="ea_col">Effect allele</label>
+                        <input type="number" class="form-control" id="ea_col" required>
+                    </div>
+                    <div class="col-sm">
+                        <label for="oa_col">Non-effect allele</label>
+                        <input type="number" class="form-control" id="oa_col" required>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="oa_col">Column index for non-effect allele</label>
-                        <input type="text" class="form-control" id="oa_col" required>
+                    <div class="col-sm">
+                        <label for="beta_col">Effect size</label>
+                        <input type="number" class="form-control" id="beta_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="beta_col">Column index for effect size</label>
-                        <input type="text" class="form-control" id="beta_col" required>
+                    <div class="col-sm">
+                        <label for="se_col">Standard error</label>
+                        <input type="number" class="form-control" id="se_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="se_col">Column index for standard error</label>
-                        <input type="text" class="form-control" id="se_col" required>
+                    <div class="col-sm">
+                        <label for="pval_col">P-value</label>
+                        <input type="number" class="form-control" id="pval_col" required>
+                    </div>
+                    <div class="col-sm">
+                        <label for="ncase_col">Case sample size</label>
+                        <input type="number" class="form-control" id="ncase_col">
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="pval_col">Column index for P-value</label>
-                        <input type="text" class="form-control" id="pval_col" required>
+                    <div class="col-sm">
+                        <label for="snp_col">DBSNP rs-identifer</label>
+                        <input type="number" class="form-control" id="snp_col">
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
+                        <label for="eaf_col">Effect allele frequency</label>
+                        <input type="number" class="form-control" id="eaf_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="oaf_col">Other allele frequency</label>
+                        <input type="number" class="form-control" id="oaf_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="imp_z_col">Imputation Z score</label>
+                        <input type="number" class="form-control" id="imp_z_col">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm">
+                        <label for="imp_info_col">Imputation INFO score</label>
+                        <input type="text" class="form-control" id="imp_info_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="ncontrol_col">Control/total sample size</label>
+                        <input type="text" class="form-control" id="ncontrol_col">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm">
                         <label for="delimiter">Column delimiter for file</label>
                         <select class="custom-select" id="delimiter">
                             <option value="tab">Tab-separated</option>
@@ -98,7 +131,7 @@
                             <option value="space">Space-separated</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="header">Does the file have a header line?</label>
                         <select class="custom-select" id="header">
                             <option value="True">True</option>
@@ -107,55 +140,21 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="ncase_col">Column index for case sample size</label>
-                        <input type="text" class="form-control" id="ncase_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="snp_col">Column index for dbsnp rs-identifer</label>
-                        <input type="text" class="form-control" id="snp_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="eaf_col">Column index for effect allele frequency</label>
-                        <input type="text" class="form-control" id="eaf_col">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="oaf_col">Column index for other allele frequency</label>
-                        <input type="text" class="form-control" id="oaf_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="imp_z_col">Column number for imputation Z score</label>
-                        <input type="text" class="form-control" id="imp_z_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="imp_info_col">Column number for imputation INFO score</label>
-                        <input type="text" class="form-control" id="imp_info_col">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="ncontrol_col">Column index for control/total sample size</label>
-                        <input type="text" class="form-control" id="ncontrol_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="header">Genome build</label>
                         <select class="custom-select" id="build">
                             <option value="GRCh37">GRCh37/hg19</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="cohort_cases">Total number of cases used in study</label>
                         <input type="text" class="form-control" id="cohort_cases">
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="cohort_controls">Total number of controls used in study</label>
                         <input type="text" class="form-control" id="cohort_controls">
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="gzipped">Is the file compressed with gzip?</label>
                         <select class="custom-select" id="gzipped">
                             <option value="False">False</option>
