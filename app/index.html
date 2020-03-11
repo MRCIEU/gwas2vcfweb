@@ -30,24 +30,23 @@
     }
 </style>
 <div class="container">
-    <div class="jumbotron bg-dark text-white">
-        <h1 class="display-4">Convert GWAS to VCF format</h1>
+    <div class="jumbotron">
+        <h1 class="display-4">Gwas2VCF</h1>
         <p class="lead">This form converts GWAS summary statistics in plain text to the VCF
             format</p>
-        <hr class="my-4 bg-light">
-        <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
-            (manuscript in preparation). Please fill in as much information as possible.</p>
-        <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can check status of your
-            data
-            by providing the job identifier below.</p>
-    </div>
+      </div>
+      <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
+        (manuscript in preparation). Please fill in as much information as possible.</p>
+    <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can check status of your
+        data
+        by providing the job identifier below.</p>
     <div class="card">
         <h5 class="card-header">Status</h5>
         <div class="card-body">
             <form class="form-inline my-2 my-lg-0">
                 <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
                        aria-label="Search">
-                <a id="search-job-btn" type="button" class="btn btn-primary">&nbsp;Check</a>
+                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">&nbsp;Check</a>
             </form>
             <div id="search-result" class="alert hidden" role="alert"></div>
         </div>
@@ -57,7 +56,8 @@
         <h5 class="card-header">Upload</h5>
         <div class="card-body">
             <form class="needs-validation" novalidate>
-                Enter file column numbers (starting at 1)
+                Enter file column numbers
+                <hr>
                 <div class="form-row">
                     <div class="col-sm">
                         <label for="chr_col">Chromosome</label>
@@ -115,14 +115,31 @@
                 <div class="form-row">
                     <div class="col-sm">
                         <label for="imp_info_col">Imputation INFO score</label>
-                        <input type="text" class="form-control" id="imp_info_col">
+                        <input type="number" class="form-control" id="imp_info_col">
                     </div>
                     <div class="col-sm">
                         <label for="ncontrol_col">Control/total sample size</label>
-                        <input type="text" class="form-control" id="ncontrol_col">
+                        <input type="number" class="form-control" id="ncontrol_col">
+                    </div>
+                </div>
+                <hr>
+                <div class="form-row">
+                    <div class="col-sm">
+                        <label for="cohort_cases">Total number of cases used in study</label>
+                        <input type="number" class="form-control" id="cohort_cases">
+                    </div>
+                    <div class="col-sm">
+                        <label for="cohort_controls">Total number of controls used in study</label>
+                        <input type="number" class="form-control" id="cohort_controls">
                     </div>
                 </div>
                 <div class="form-row">
+                    <div class="col-sm">
+                        <label for="header">Genome build</label>
+                        <select class="custom-select" id="build">
+                            <option value="GRCh37">GRCh37/hg19</option>
+                        </select>
+                    </div>
                     <div class="col-sm">
                         <label for="delimiter">Column delimiter for file</label>
                         <select class="custom-select" id="delimiter">
@@ -138,22 +155,6 @@
                             <option value="False">False</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-sm">
-                        <label for="header">Genome build</label>
-                        <select class="custom-select" id="build">
-                            <option value="GRCh37">GRCh37/hg19</option>
-                        </select>
-                    </div>
-                    <div class="col-sm">
-                        <label for="cohort_cases">Total number of cases used in study</label>
-                        <input type="text" class="form-control" id="cohort_cases">
-                    </div>
-                    <div class="col-sm">
-                        <label for="cohort_controls">Total number of controls used in study</label>
-                        <input type="text" class="form-control" id="cohort_controls">
-                    </div>
                     <div class="col-sm">
                         <label for="gzipped">Is the file compressed with gzip?</label>
                         <select class="custom-select" id="gzipped">
@@ -162,6 +163,7 @@
                         </select>
                     </div>
                 </div>
+                <hr>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="gwas_file">
                     <label class="custom-file-label" for="gwas_file">Choose file</label>
@@ -177,7 +179,7 @@
                         </div>
                     </div>
                 </div>
-                <a id="submit-job-btn" type="button" class="btn btn-primary">Submit form</a>
+                <a id="submit-job-btn" type="button" class="btn btn-secondary" style="color:white;">Submit form</a>
                 <div id="upload-spinner" class="spinner-border text-primary hidden" role="status">
                     <span class="sr-only">Loading...</span>
                   </div>
