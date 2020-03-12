@@ -70,6 +70,6 @@ docker exec -it gwas2vcfweb_web_1 pytest -v
 
 ### Web
 
-1. Point browser to ```http://<hostname>:8400```. Port can be configure in the [compose file](docker-compose.yml).
+1. Point browser to ```http://<hostname>```. Port can be configure in the [compose file](docker-compose.yml).
 2. Upload file & obtain job identifier
 3. Download results for job identifier
