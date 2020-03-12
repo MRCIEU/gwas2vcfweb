@@ -24,36 +24,78 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 <style>
     div.hidden {
         display: none;
     }
 </style>
-<div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Gwas2VCF</h1>
-        <p class="lead">This form converts GWAS summary statistics in plain text to the VCF
-            format</p>
-      </div>
-      <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
-        (manuscript in preparation). Please fill in as much information as possible.</p>
-    <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can check status of your
-        data
-        by providing the job identifier below.</p>
-    <div class="card">
-        <h5 class="card-header">Status</h5>
-        <div class="card-body">
-            <form class="form-inline my-2 my-lg-0">
-                <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
-                       aria-label="Search">
-                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">&nbsp;Check</a>
-            </form>
-            <div id="search-result" class="alert hidden" role="alert"></div>
-        </div>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" style="margin-bottom: 10px;">
+    <a class="navbar-brand" href="https://github.com/mrcieu/gwas2vcf">Gwas2VCF</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#requirements-header">Requirements<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#usage-header">Usage</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#upload-header">Upload</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#status-header">Status</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item" style="margin-top: 8px;">
+                <a class="github-button" href="https://github.com/mrcieu/gwas2vcf" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star mrcieu/gwas2vcf on GitHub">Star</a>
+            </li>
+            <li class="nav-item" style="margin-top: 8px;">
+                <a class="github-button" href="https://github.com/mrcieu/gwas2vcf/issues" data-size="large" data-show-count="true" aria-label="Issue mrcieu/gwas2vcf on GitHub">Issue</a>
+            </li>
+      </ul>
     </div>
-    <p></p>
+</nav>
+<div class="container">
+    <h3>Convert GWAS summary statistics to the variant call format</h3>
+    <p>A common format to store GWAS summary data and associated metadata to aid with data sharing and tool development (manuscript in preparation)</p>
+    <p>The <a target="_blank" href="https://github.com/mrcieu/gwas-vcf-spec">VCF</a> format fulfils the following requirements:</p>
+    <ul>
+        <li>Pre-existing, well known and well defined format</li>
+        <li>Handles complex variants, build differences and multi-allelics using the <a target="_blank" href="https://github.com/samtools/htslib">HTSLIB</a> library</li>
+        <li>Indexing makes querying by position extremely fast: <a target="_blank" href="https://github.com/MRCIEU/gwas-vcf-performance">VCF is 8.6-45.5x faster to extract variant(s) by genomic position</a></li>
+        <li>Many established tools already exist for manipulation</li>
+        <li>The file format is relatively small</li>        
+        <li>Indexing time is very fast</li>
+        <li>Multiple GWAS may be stored in a single file</li>
+        <li>Easy to export data into other tabular formats</li>
+        <li>Can import directly into a distributed database: <a target="_blank" href="https://github.com/GenomicsDB/GenomicsDB">GenomicsDB</a></li>
+    </ul>
+    <h5 id="requirements-header">Requirements</h5>
+    <p>This tool expects GWAS summary statistics in tabular format, one variant per row. The minimum fields required are:</p>
+    <ul>
+        <li>Chromosome</li>
+        <li>Base position</li>
+        <li>Allele</li>
+        <li>Effect size</li>
+        <li>Standard error</li>
+        <li>P value</li>
+    </ul>
+    <h5 id="usage-header">Usage</h5>
+    <p>Users may run the tool on their own server by downloading <a target="_blank" href="https://github.com/MRCIEU/gwas2vcf">Gwas2VCF</a></p>
+    <p>For online submissions:</p>
+    <ol>
+        <li>Fill in the form below, provide as much information as possible</li>
+        <li>Record the unique job identifier</li>
+        <li>Check job status</li>
+        <li>Download your processed data</li>
+    </ol>
     <div class="card" id="submit-form">
-        <h5 class="card-header">Upload</h5>
+        <h5 class="card-header" id="upload-header">Upload</h5>
         <div class="card-body">
             <form class="needs-validation" novalidate>
                 Enter file column numbers
@@ -184,6 +226,18 @@
                     <span class="sr-only">Loading...</span>
                   </div>
             </form>
+        </div>
+    </div>
+    <p></p>
+    <div class="card">
+        <h5 class="card-header" id="status-header">Status</h5>
+        <div class="card-body">
+            <form class="form-inline my-2 my-lg-0">
+                <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
+                       aria-label="Search">
+                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">&nbsp;Check</a>
+            </form>
+            <div id="search-result" class="alert hidden" role="alert"></div>
         </div>
     </div>
     <div id="server-message" class="alert hidden" role="alert"></div>
