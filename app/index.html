@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
           integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
-    <title>gwas2vcf</title>
+    <title>Gwas2VCF</title>
 </head>
 <body>
 <!-- Optional JavaScript -->
@@ -24,73 +24,165 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 <style>
     div.hidden {
         display: none;
     }
 </style>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" style="margin-bottom: 10px;">
+    <a class="navbar-brand" href="https://github.com/mrcieu/gwas2vcf">Gwas2VCF</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#requirements-header">Requirements<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#usage-header">Usage</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#upload-header">Upload</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#status-header">Status</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item" style="margin-top: 8px;">
+                <a class="github-button" href="https://github.com/mrcieu/gwas2vcf" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star mrcieu/gwas2vcf on GitHub">Star</a>
+            </li>
+            <li class="nav-item" style="margin-top: 8px;">
+                <a class="github-button" href="https://github.com/mrcieu/gwas2vcf/issues" data-size="large" data-show-count="true" aria-label="Issue mrcieu/gwas2vcf on GitHub">Issue</a>
+            </li>
+      </ul>
+    </div>
+</nav>
 <div class="container">
-    <div class="jumbotron bg-dark text-white">
-        <h1 class="display-4">Convert GWAS to VCF format</h1>
-        <p class="lead">This form converts GWAS summary statistics in plain text to the VCF
-            format</p>
-        <hr class="my-4 bg-light">
-        <p>The VCF format provides much better performance for interval queries that supports a wide range of analyses
-            (manuscript in preparation). Please fill in as much information as possible.</p>
-        <p>Once submitted, a job identifier is returned that uniquely identifies your data. You can check status of your
-            data
-            by providing the job identifier below.</p>
-    </div>
-    <div class="card">
-        <h5 class="card-header">Status</h5>
-        <div class="card-body">
-            <form class="form-inline my-2 my-lg-0">
-                <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
-                       aria-label="Search">
-                <a id="search-job-btn" type="button" class="btn btn-primary">&nbsp;Check</a>
-            </form>
-            <div id="search-result" class="alert hidden" role="alert"></div>
-        </div>
-    </div>
-    <p></p>
+    <h3>Convert GWAS summary statistics to the variant call format</h3>
+    <p>A common format to store GWAS summary data and associated metadata to aid with data sharing and tool development (manuscript in preparation)</p>
+    <p>The <a target="_blank" href="https://github.com/mrcieu/gwas-vcf-spec">VCF</a> format fulfils the following requirements:</p>
+    <ul>
+        <li>Pre-existing, well known and well defined format</li>
+        <li>Handles complex variants, build differences and multi-allelics using the <a target="_blank" href="https://github.com/samtools/htslib">HTSLIB</a> library</li>
+        <li>Indexing makes querying by position extremely fast: <a target="_blank" href="https://github.com/MRCIEU/gwas-vcf-performance">VCF is 8.6-45.5x faster to extract variant(s) by genomic position</a></li>
+        <li>Many established tools already exist for manipulation</li>
+        <li>The file format is relatively small</li>        
+        <li>Indexing time is very fast</li>
+        <li>Multiple GWAS may be stored in a single file</li>
+        <li>Easy to export data into other tabular formats</li>
+        <li>Can import directly into a distributed database: <a target="_blank" href="https://github.com/GenomicsDB/GenomicsDB">GenomicsDB</a></li>
+    </ul>
+    <h5 id="requirements-header">Requirements</h5>
+    <p>This tool expects GWAS summary statistics in tabular format, one variant per row. The minimum fields required are:</p>
+    <ul>
+        <li>Chromosome</li>
+        <li>Base position</li>
+        <li>Allele</li>
+        <li>Effect size</li>
+        <li>Standard error</li>
+        <li>P value</li>
+    </ul>
+    <h5 id="usage-header">Usage</h5>
+    <p>Users may run the tool on their own server by downloading <a target="_blank" href="https://github.com/MRCIEU/gwas2vcf">Gwas2VCF</a></p>
+    <p>For online submissions:</p>
+    <ol>
+        <li>Fill in the form below, provide as much information as possible</li>
+        <li>Record the unique job identifier</li>
+        <li>Check job status</li>
+        <li>Download your processed data</li>
+    </ol>
     <div class="card" id="submit-form">
-        <h5 class="card-header">Upload</h5>
+        <h5 class="card-header" id="upload-header">Upload</h5>
         <div class="card-body">
             <form class="needs-validation" novalidate>
+                Enter file column numbers
+                <hr>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="chr_col">Column index for chromosome</label>
-                        <input type="text" class="form-control" id="chr_col" required>
+                    <div class="col-sm">
+                        <label for="chr_col">Chromosome</label>
+                        <input type="number" class="form-control" id="chr_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="pos_col">Column index for base position</label>
-                        <input type="text" class="form-control" id="pos_col" required>
+                    <div class="col-sm">
+                        <label for="pos_col">Base position</label>
+                        <input type="number" class="form-control" id="pos_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="ea_col">Column index for effect allele</label>
-                        <input type="text" class="form-control" id="ea_col" required>
+                    <div class="col-sm">
+                        <label for="ea_col">Effect allele</label>
+                        <input type="number" class="form-control" id="ea_col" required>
+                    </div>
+                    <div class="col-sm">
+                        <label for="oa_col">Non-effect allele</label>
+                        <input type="number" class="form-control" id="oa_col" required>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="oa_col">Column index for non-effect allele</label>
-                        <input type="text" class="form-control" id="oa_col" required>
+                    <div class="col-sm">
+                        <label for="beta_col">Effect size</label>
+                        <input type="number" class="form-control" id="beta_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="beta_col">Column index for effect size</label>
-                        <input type="text" class="form-control" id="beta_col" required>
+                    <div class="col-sm">
+                        <label for="se_col">Standard error</label>
+                        <input type="number" class="form-control" id="se_col" required>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="se_col">Column index for standard error</label>
-                        <input type="text" class="form-control" id="se_col" required>
+                    <div class="col-sm">
+                        <label for="pval_col">P-value</label>
+                        <input type="number" class="form-control" id="pval_col" required>
+                    </div>
+                    <div class="col-sm">
+                        <label for="ncase_col">Case sample size</label>
+                        <input type="number" class="form-control" id="ncase_col">
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="pval_col">Column index for P-value</label>
-                        <input type="text" class="form-control" id="pval_col" required>
+                    <div class="col-sm">
+                        <label for="snp_col">DBSNP rs-identifer</label>
+                        <input type="number" class="form-control" id="snp_col">
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
+                        <label for="eaf_col">Effect allele frequency</label>
+                        <input type="number" class="form-control" id="eaf_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="oaf_col">Other allele frequency</label>
+                        <input type="number" class="form-control" id="oaf_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="imp_z_col">Imputation Z score</label>
+                        <input type="number" class="form-control" id="imp_z_col">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm">
+                        <label for="imp_info_col">Imputation INFO score</label>
+                        <input type="number" class="form-control" id="imp_info_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="ncontrol_col">Control/total sample size</label>
+                        <input type="number" class="form-control" id="ncontrol_col">
+                    </div>
+                </div>
+                <hr>
+                <div class="form-row">
+                    <div class="col-sm">
+                        <label for="cohort_cases">Total number of cases used in study</label>
+                        <input type="number" class="form-control" id="cohort_cases">
+                    </div>
+                    <div class="col-sm">
+                        <label for="cohort_controls">Total number of controls used in study</label>
+                        <input type="number" class="form-control" id="cohort_controls">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm">
+                        <label for="header">Genome build</label>
+                        <select class="custom-select" id="build">
+                            <option value="GRCh37">GRCh37/hg19</option>
+                        </select>
+                    </div>
+                    <div class="col-sm">
                         <label for="delimiter">Column delimiter for file</label>
                         <select class="custom-select" id="delimiter">
                             <option value="tab">Tab-separated</option>
@@ -98,64 +190,14 @@
                             <option value="space">Space-separated</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="header">Does the file have a header line?</label>
                         <select class="custom-select" id="header">
                             <option value="True">True</option>
                             <option value="False">False</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="ncase_col">Column index for case sample size</label>
-                        <input type="text" class="form-control" id="ncase_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="snp_col">Column index for dbsnp rs-identifer</label>
-                        <input type="text" class="form-control" id="snp_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="eaf_col">Column index for effect allele frequency</label>
-                        <input type="text" class="form-control" id="eaf_col">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="oaf_col">Column index for other allele frequency</label>
-                        <input type="text" class="form-control" id="oaf_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="imp_z_col">Column number for imputation Z score</label>
-                        <input type="text" class="form-control" id="imp_z_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="imp_info_col">Column number for imputation INFO score</label>
-                        <input type="text" class="form-control" id="imp_info_col">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="ncontrol_col">Column index for control/total sample size</label>
-                        <input type="text" class="form-control" id="ncontrol_col">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="header">Genome build</label>
-                        <select class="custom-select" id="build">
-                            <option value="GRCh37">GRCh37/hg19</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="cohort_cases">Total number of cases used in study</label>
-                        <input type="text" class="form-control" id="cohort_cases">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-md-4 mb-3">
-                        <label for="cohort_controls">Total number of controls used in study</label>
-                        <input type="text" class="form-control" id="cohort_controls">
-                    </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-sm">
                         <label for="gzipped">Is the file compressed with gzip?</label>
                         <select class="custom-select" id="gzipped">
                             <option value="False">False</option>
@@ -163,6 +205,7 @@
                         </select>
                     </div>
                 </div>
+                <hr>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="gwas_file">
                     <label class="custom-file-label" for="gwas_file">Choose file</label>
@@ -178,11 +221,23 @@
                         </div>
                     </div>
                 </div>
-                <a id="submit-job-btn" type="button" class="btn btn-primary">Submit form</a>
+                <a id="submit-job-btn" type="button" class="btn btn-secondary" style="color:white;">Submit form</a>
                 <div id="upload-spinner" class="spinner-border text-primary hidden" role="status">
                     <span class="sr-only">Loading...</span>
                   </div>
             </form>
+        </div>
+    </div>
+    <p></p>
+    <div class="card">
+        <h5 class="card-header" id="status-header">Status</h5>
+        <div class="card-body">
+            <form class="form-inline my-2 my-lg-0">
+                <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
+                       aria-label="Search">
+                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">&nbsp;Check</a>
+            </form>
+            <div id="search-result" class="alert hidden" role="alert"></div>
         </div>
     </div>
     <div id="server-message" class="alert hidden" role="alert"></div>
