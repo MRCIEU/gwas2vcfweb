@@ -1,6 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160615786-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'UA-160615786-1');
+    </script>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,6 +19,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <!-- Font awesome CSS -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
           integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
@@ -38,16 +49,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#requirements-header">Requirements<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#requirements">Requirements<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#usage-header">Usage</a>
+                <a class="nav-link" href="#usage">Usage</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#upload-header">Upload</a>
+                <a class="nav-link" href="#example">Example</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#status-header">Status</a>
+                <a class="nav-link" href="#upload">Upload</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#status">Status</a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -63,7 +77,7 @@
 <div class="container">
     <h3>Convert GWAS summary statistics to the variant call format</h3>
     <p>A common format to store GWAS summary data and associated metadata to aid with data sharing and tool development (manuscript in preparation)</p>
-    <p>The <a target="_blank" href="https://github.com/mrcieu/gwas-vcf-spec">VCF</a> format fulfils the following requirements:</p>
+    <p>The <a target="_blank" href="https://github.com/mrcieu/gwas-vcf-spec">VCF</a> format has a number of benefits:</p>
     <ul>
         <li>Pre-existing, well known and well defined format</li>
         <li>Handles complex variants, build differences and multi-allelics using the <a target="_blank" href="https://github.com/samtools/htslib">HTSLIB</a> library</li>
@@ -75,31 +89,35 @@
         <li>Easy to export data into other tabular formats</li>
         <li>Can import directly into a distributed database: <a target="_blank" href="https://github.com/GenomicsDB/GenomicsDB">GenomicsDB</a></li>
     </ul>
-    <h5 id="requirements-header">Requirements</h5>
-    <p>This tool expects GWAS summary statistics in tabular format, one variant per row. The minimum fields required are:</p>
+    <h5 id="requirements">Requirements</h5>
+    <p>This tool expects GWAS summary statistics in tabular format, one variant per row. The minimum required fields are:</p>
     <ul>
         <li>Chromosome</li>
-        <li>Base position</li>
+        <li>Base position (currently only hg19/GRCh37 is supported)</li>
         <li>Allele</li>
         <li>Effect size</li>
         <li>Standard error</li>
         <li>P value</li>
     </ul>
-    <h5 id="usage-header">Usage</h5>
-    <p>Users may run the tool on their own server by downloading <a target="_blank" href="https://github.com/MRCIEU/gwas2vcf">Gwas2VCF</a></p>
+    <h5 id="usage">Usage</h5>
+    <p>Users may run the tool on their own hardware by downloading <a target="_blank" href="https://github.com/MRCIEU/gwas2vcf">Gwas2VCF</a></p>
     <p>For online submissions:</p>
     <ol>
         <li>Fill in the form below, provide as much information as possible</li>
         <li>Record the unique job identifier</li>
         <li>Check job status</li>
-        <li>Download your processed data</li>
+        <li>Download GWAS-VCF</li>
+        <li>Parse GWAS-VCF in <a target="_blank" href="https://github.com/MRCIEU/gwasvcf">R</a> or <a target="_blank" href="https://github.com/MRCIEU/pygwasvcf">Python</a> and connect to downstream analyses using <a target="_blank" href="https://github.com/MRCIEU/gwasglue">gwasglue</a></li>
     </ol>
+    <h5 id="example">Example</h5>
+    <p>Test data is available from <a target="_blank" href="https://raw.githubusercontent.com/MRCIEU/gwas2vcfweb/master/app/tests/data/example.1k.txt">Github</a></p>
     <div class="card" id="submit-form">
-        <h5 class="card-header" id="upload-header">Upload</h5>
+        <h5 class="card-header" id="upload">Upload</h5>
         <div class="card-body">
             <form class="needs-validation" novalidate>
-                Enter file column numbers
+                <p>Enter file column numbers&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Provide nth column number in the GWAS file. First column starts at 1."></i></p>
                 <hr>
+                <p>Required</p>
                 <div class="form-row">
                     <div class="col-sm">
                         <label for="chr_col">Chromosome</label>
@@ -120,7 +138,7 @@
                 </div>
                 <div class="form-row">
                     <div class="col-sm">
-                        <label for="beta_col">Effect size</label>
+                        <label for="beta_col">Effect size&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Regression beta or log odds ratio"></i></label>
                         <input type="number" class="form-control" id="beta_col" required>
                     </div>
                     <div class="col-sm">
@@ -128,14 +146,12 @@
                         <input type="number" class="form-control" id="se_col" required>
                     </div>
                     <div class="col-sm">
-                        <label for="pval_col">P-value</label>
+                        <label for="pval_col">P-value&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Untransformed association P value in the range 0,1"></i></label>
                         <input type="number" class="form-control" id="pval_col" required>
                     </div>
-                    <div class="col-sm">
-                        <label for="ncase_col">Case sample size</label>
-                        <input type="number" class="form-control" id="ncase_col">
-                    </div>
                 </div>
+                <hr>
+                <p>Optional</p>
                 <div class="form-row">
                     <div class="col-sm">
                         <label for="snp_col">DBSNP rs-identifer</label>
@@ -149,29 +165,34 @@
                         <label for="oaf_col">Other allele frequency</label>
                         <input type="number" class="form-control" id="oaf_col">
                     </div>
-                    <div class="col-sm">
-                        <label for="imp_z_col">Imputation Z score</label>
-                        <input type="number" class="form-control" id="imp_z_col">
-                    </div>
                 </div>
                 <div class="form-row">
                     <div class="col-sm">
-                        <label for="imp_info_col">Imputation INFO score</label>
+                        <label for="imp_z_col">Imputation Z score&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Summary statistics imputation Z score"></i></label>
+                        <input type="number" class="form-control" id="imp_z_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="imp_info_col">Imputation INFO score&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Variant imputation INFO score"></i></label>
                         <input type="number" class="form-control" id="imp_info_col">
                     </div>
                     <div class="col-sm">
-                        <label for="ncontrol_col">Control/total sample size</label>
+                        <label for="ncontrol_col">Control/total sample size&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Number controls in case-control study or sample size for continuous outcome"></i></label>
                         <input type="number" class="form-control" id="ncontrol_col">
+                    </div>
+                    <div class="col-sm">
+                        <label for="ncase_col">Number of cases&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Number of cases in case-control study"></i></label>
+                        <input type="number" class="form-control" id="ncase_col">
                     </div>
                 </div>
                 <hr>
+                <p>Enter study and file information</p>
                 <div class="form-row">
                     <div class="col-sm">
-                        <label for="cohort_cases">Total number of cases used in study</label>
+                        <label for="cohort_cases">Total number of cases used in study&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Total number of cases in case-control study"></i></label>
                         <input type="number" class="form-control" id="cohort_cases">
                     </div>
                     <div class="col-sm">
-                        <label for="cohort_controls">Total number of controls used in study</label>
+                        <label for="cohort_controls">Total number of controls used in study&nbsp;<i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" title="Total number of controls in case-control study or total sample size if outcome is continuous"></i></label>
                         <input type="number" class="form-control" id="cohort_controls">
                     </div>
                 </div>
@@ -206,6 +227,7 @@
                     </div>
                 </div>
                 <hr>
+                <p>Upload GWAS file</p>
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="gwas_file">
                     <label class="custom-file-label" for="gwas_file">Choose file</label>
@@ -217,7 +239,7 @@
                             I agree the host will not be responsible for loss or corruption of data
                         </label>
                         <div class="invalid-feedback">
-                            You must agree before submitting.
+                            You must agree before submitting
                         </div>
                     </div>
                 </div>
@@ -230,7 +252,7 @@
     </div>
     <p></p>
     <div class="card">
-        <h5 class="card-header" id="status-header">Status</h5>
+        <h5 class="card-header" id="status">Status</h5>
         <div class="card-body">
             <form class="form-inline my-2 my-lg-0">
                 <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
@@ -250,6 +272,9 @@
 </div>
 <script>
     $(document).ready(function () {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
         $("#search-job-btn").click(function () {
             var job_id = $("#search-job-val").val();
 
