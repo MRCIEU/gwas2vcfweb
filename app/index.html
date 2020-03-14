@@ -36,9 +36,13 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <style>
     div.hidden {
         display: none;
+    }
+    pre.prettyprint {
+        border: none !important;
     }
 </style>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark" style="margin-bottom: 10px;">
@@ -110,7 +114,15 @@
         <li>Parse GWAS-VCF in <a target="_blank" href="https://github.com/MRCIEU/gwasvcf">R</a> or <a target="_blank" href="https://github.com/MRCIEU/pygwasvcf">Python</a> and connect to downstream analyses using <a target="_blank" href="https://github.com/MRCIEU/gwasglue">gwasglue</a></li>
     </ol>
     <h5 id="example">Example</h5>
-    <p>Test data is available from <a target="_blank" href="https://raw.githubusercontent.com/MRCIEU/gwas2vcfweb/master/app/tests/data/example.1k.txt">Github</a></p>
+    <ol>
+        <li>Download a subset of the GLGC (Willer CJ et al, 2013) GWAS of LDL cholesterol:</li>
+        <pre style="margin-top: 10px; margin-bottom: 10px;" class="prettyprint lang-sh">curl -o 'example.txt' 'https://raw.githubusercontent.com/MRCIEU/gwas2vcfweb/master/app/tests/data/example.1k.txt'</pre>
+        <li>Complete submission fields or click populate</li>
+        <li>Select file for upload</li>
+        <li>Submit form</li>
+    </ol>
+    <a id="populate-btn" type="button" style="color:white;" class="btn btn-secondary">Populate</a>
+    <p></p>
     <div class="card" id="submit-form">
         <h5 class="card-header" id="upload">Upload</h5>
         <div class="card-body">
@@ -257,7 +269,7 @@
             <form class="form-inline my-2 my-lg-0">
                 <input id="search-job-val" class="form-control mr-sm-2" type="search" placeholder="Job id"
                        aria-label="Search">
-                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">&nbsp;Check</a>
+                <a id="search-job-btn" type="button" style="color:white;" class="btn btn-secondary">Check</a>
             </form>
             <div id="search-result" class="alert hidden" role="alert" style="margin-top: 10px;"></div>
         </div>
@@ -275,6 +287,7 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
+
         $("#search-job-btn").click(function () {
             var job_id = $("#search-job-val").val();
 
@@ -296,6 +309,20 @@
             });
 
         });
+
+        $("#populate-btn").click(function () {
+            $("#chr_col").val(1)
+            $("#pos_col").val(2)
+            $("#snp_col").val(3)
+            $("#ea_col").val(4)
+            $("#oa_col").val(5)
+            $("#beta_col").val(6)
+            $("#se_col").val(7)
+            $("#ncontrol_col").val(8)
+            $("#pval_col").val(9)
+            $("#eaf_col").val(10)
+            $("#gzipped").val("False")
+        }); 
 
         $("#submit-job-btn").click(function () {
 
