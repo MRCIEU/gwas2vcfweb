@@ -30,7 +30,7 @@ class Download(Resource):
         # check output file is ready for download
         if not os.path.exists(os.path.join(job_dir, filename)):
             logging.info("No outputs available. Result are processing or failed")
-            return jsonify(message="Job {} is not complete. Please check back later".format(args['job_id']))
+            return jsonify(message="Job {} is not complete. Please check back later, a job will take at least 30-60 minutes depending on load and GWAS genotype density.".format(args['job_id']))
 
         return jsonify(message="Job {} is complete.".format(args['job_id']),
                        vcf_uri="/vcf/download?job_id=" + args['job_id'] + "&file_type=vcf",
