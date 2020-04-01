@@ -1,4 +1,4 @@
-# Web interface for [gwas2vcf](https://github.com/mrcieu/gwas2vcfweb)
+# Web interface for [gwas2vcf](https://github.com/mrcieu/gwas2vcf)
 
 Web interface for processing GWAS summary data to VCF format
 
