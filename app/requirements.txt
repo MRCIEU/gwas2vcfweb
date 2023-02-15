@@ -3,4 +3,4 @@ flask-restplus==0.12.1
 marshmallow==3.0.0rc5
 pytest==4.4.1
 requests==2.21.0
-Werkzeug==0.15.6
+Werkzeug==2.2.3
